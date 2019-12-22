@@ -1,11 +1,14 @@
 package FuelControl;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 import java.io.File;
+import java.io.IOException;
+import java.io.StringWriter;
 
 class CarsControllerTest {
 
@@ -30,6 +33,11 @@ class CarsControllerTest {
         return check;
     }
 
+    void deleteCar(Car car) {
+        File file = new File(car.getNumber());
+        assertEquals(true, file.delete());
+    }
+
     @Test
     void addCar() {
         Car testCar = this.createTetstCar();
@@ -37,8 +45,7 @@ class CarsControllerTest {
         assertEquals(result,"{\"status\":\"ok\"}");
         result = this.carsController.addCar(testCar);
         assertEquals(result,"{\"status\":\"error\",\"error\":\"this car is registrated\"}");
-        File file = new File(testCar.getNumber());
-        assertEquals(true, file.delete());
+        this.deleteCar(testCar);
     }
 
     @Test
@@ -47,34 +54,40 @@ class CarsControllerTest {
 
         this.carsController.addCar(testCar);
 
-        CheckModel check
-        for
-        CheckModel check1 = this.createTestCheck(10,100100,500);
-        CheckModel check2 = this.createTestCheck(10,100200,500);
-        CheckModel check3 = this.createTestCheck(10,100300,500);
-
-        this.carsController.addCheck(check1);
-        this.carsController.addCheck(check2);
-        this.carsController.addCheck(check3);
-
-        testCar.mileage.add( 100100 );
-        testCar.mileage.add( 100200 );
-        testCar.mileage.add( 100300 );
-        testCar.liter.add((float) 10);
-        testCar.liter.add((float) 10);
-        testCar.liter.add((float) 10);
-        testCar.money.add(500);
-        testCar.money.add(500);
-        testCar.money.add(500);
+        for(int i = 1; i < 3; i++){
+            int milage = testCar.getMileageStart() + i*100;
+            CheckModel check = this.createTestCheck(10,milage,500);
+            this.carsController.addCheck(check);
+            testCar.mileage.add( milage );
+            testCar.liter.add((float) 10);
+            testCar.money.add(500);
+        }
 
         Object result = this.carsController.getHistory( testCar.getNumber() );
-        assertEquals(result, testCar);
-        File file = new File(testCar.getNumber());
-        assertEquals(true, file.delete());
+
+        ObjectMapper mapper = new ObjectMapper();
+        StringWriter writer = new StringWriter();
+
+        String r1 = "";
+        String r2 = " ";
+
+        try {
+            mapper.writeValue(writer, result);
+            r1 = writer.toString();
+            writer = new StringWriter();
+            mapper.writeValue(writer, result);
+            r2 = writer.toString();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        assertEquals(r1, r2);
+        this.deleteCar(testCar);
     }
 
     @Test
     void getHistory() {
+
     }
 
     @Test

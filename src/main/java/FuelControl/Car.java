@@ -34,7 +34,7 @@ public class Car {
         this.motorVolume = motorVolume;
     }
 
-    public float getMileageStart() {
+    public int getMileageStart() {
         return mileageStart;
     }
 
