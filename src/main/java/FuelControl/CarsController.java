@@ -58,6 +58,7 @@ public class CarsController {
         }
     }
 
+//    http://localhost:8080/getCarHistory?number=o000o0123
     @RequestMapping("/getCarHistory")
     public Object getHistory(@RequestParam(value="number", required=false, defaultValue="") String number) {
         FileWork file = new FileWork();
