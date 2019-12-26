@@ -1,7 +1,7 @@
 package FuelControl;
 
 public class NewCarModel {
-    private String model = "кря кря";
+    private String model = "";
     public void NewCarModel(String model, int year, float motorVolume, int mileageStart){
         this.model = model;
         System.out.println(year);

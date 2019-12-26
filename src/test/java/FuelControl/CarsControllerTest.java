@@ -38,6 +38,26 @@ class CarsControllerTest {
         assertEquals(true, file.delete());
     }
 
+    private void equalCarByJson(Car A, Car B){
+        ObjectMapper mapper = new ObjectMapper();
+        StringWriter writer = new StringWriter();
+
+        String r1 = "";
+        String r2 = " ";
+
+        try {
+            mapper.writeValue(writer, A);
+            r1 = writer.toString();
+            writer = new StringWriter();
+            mapper.writeValue(writer, B);
+            r2 = writer.toString();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        assertEquals(r1, r2);
+    }
+
     @Test
     void addCar() {
         Car testCar = this.createTetstCar();
@@ -63,34 +83,48 @@ class CarsControllerTest {
             testCar.money.add(500);
         }
 
-        Object result = this.carsController.getHistory( testCar.getNumber() );
-
-        ObjectMapper mapper = new ObjectMapper();
-        StringWriter writer = new StringWriter();
-
-        String r1 = "";
-        String r2 = " ";
-
-        try {
-            mapper.writeValue(writer, result);
-            r1 = writer.toString();
-            writer = new StringWriter();
-            mapper.writeValue(writer, result);
-            r2 = writer.toString();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        assertEquals(r1, r2);
+        Car result = (Car) this.carsController.getHistory( testCar.getNumber() );
+        this.equalCarByJson(result,testCar);
         this.deleteCar(testCar);
     }
 
     @Test
     void getHistory() {
+        Car testCar = this.createTetstCar();
 
+        this.carsController.addCar(testCar);
+
+        for(int i = 1; i < 3; i++){
+            int milage = testCar.getMileageStart() + i*100;
+            CheckModel check = this.createTestCheck(10,milage,500);
+            this.carsController.addCheck(check);
+            testCar.mileage.add( milage );
+            testCar.liter.add((float) 10);
+            testCar.money.add(500);
+        }
+
+        Car carHistory = (Car) this.carsController.getHistory(testCar.getNumber());
+
+        this.equalCarByJson(carHistory, testCar);
+        this.deleteCar(testCar);
     }
 
     @Test
     void fuelConsumption() {
+        Car testCar = this.createTetstCar();
+
+        this.carsController.addCar(testCar);
+
+        for(int i = 1; i < 3; i++){
+            int milage = testCar.getMileageStart() + i*100;
+            CheckModel check = this.createTestCheck(10,milage,500);
+            this.carsController.addCheck(check);
+            testCar.mileage.add( milage );
+            testCar.liter.add((float) 10);
+            testCar.money.add(500);
+        }
+        String consumption =  this.carsController.fuelConsumption(testCar.getNumber());
+        assertEquals("{\"status\":\"ok\",\"Consumption\":\"10.0\"}",consumption);
+        this.deleteCar(testCar);
     }
 }

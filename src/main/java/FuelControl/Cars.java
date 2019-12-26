@@ -20,13 +20,9 @@ public class Cars {
         }
         Car car = new Car();
         car.setModel(model);
-//        car.model = model;
         car.setYear(year);
-//        car.year = year;
         car.setMotorVolume(motorVolume);
-//        car.motorVolume = motorVolume;
         car.setMileageStart(mileage);
-//        car.mileageStart = mileage;
 
         car.money = new ArrayList<Integer>();
         car.liter = new ArrayList<Float>();
@@ -50,13 +46,6 @@ public class Cars {
         return sum;
     }
 
-//    public double calcFuelСonsumption(String number) {
-//        Car car = this.cars.get(number);
-//        int mileage = car.mileage.get( car.mileage.size() - 1 ) - car.getMileageStart();
-//        double fuel = this.sum(car.liter);
-//        return (fuel / mileage) * 100;
-//    }
-
     public int sumMoney(Car car) {
         return this.sum(car.money);
     }
@@ -69,5 +58,4 @@ public class Cars {
         return this.cars.keySet();
     }
 
-//    public dumpCarJSON
 }

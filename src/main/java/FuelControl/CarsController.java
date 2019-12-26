@@ -82,7 +82,7 @@ public class CarsController {
     }
 
     @RequestMapping("/fuelConsumption")
-    public Object fuelConsumption(@RequestParam(value="number", required=false, defaultValue="") String number) {
+    public String fuelConsumption(@RequestParam(value="number", required=false, defaultValue="") String number) {
         FileWork file = new FileWork();
         if( !file.isFile(number ) )
             return "{\"status\":\"error\",\"error\":\"this car is registrated\"}";
